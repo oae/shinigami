@@ -1,0 +1,45 @@
+#!/usr/bin/env sh
+
+# check if hakuneko repo exists
+if [ ! -d ".hakuneko" ]; then
+    git clone https://github.com/manga-download/hakuneko.git .hakuneko --depth 1
+fi
+# check if hakuneko repo is up-to-date
+cd .hakuneko
+git fetch origin
+if [ "$(git rev-parse HEAD)" != "$(git rev-parse origin/master)" ]; then
+    git pull origin master
+fi
+
+# sync connectors to repository
+rm -rf ../src/plugins/connectors
+cp -R src/web/mjs/connectors ../src/plugins
+
+# remove unsupported connectors
+rm -rf ../src/plugins/connectors/system
+rm -rf ../src/plugins/connectors/templates/@Samples.mjs
+rm -rf ../src/plugins/connectors/Allanimesite2.mjs
+rm -rf ../src/plugins/connectors/AnimePahe.mjs
+rm -rf ../src/plugins/connectors/BilibiliComics.mjs
+rm -rf ../src/plugins/connectors/BilibiliManhua.mjs
+rm -rf ../src/plugins/connectors/CocoManHua.mjs
+rm -rf ../src/plugins/connectors/Comikey.mjs
+rm -rf ../src/plugins/connectors/CrunchyScan.mjs
+rm -rf ../src/plugins/connectors/JapScan.mjs
+rm -rf ../src/plugins/connectors/LectorManga.mjs
+rm -rf ../src/plugins/connectors/MangAs.mjs
+rm -rf ../src/plugins/connectors/MangaDig.mjs
+rm -rf ../src/plugins/connectors/MangaFoxFun.mjs
+rm -rf ../src/plugins/connectors/MangaGo.mjs
+rm -rf ../src/plugins/connectors/MangaHereFun.mjs
+rm -rf ../src/plugins/connectors/MangaHub.mjs
+rm -rf ../src/plugins/connectors/MangaKakalotFun.mjs
+rm -rf ../src/plugins/connectors/MangaKu.mjs
+rm -rf ../src/plugins/connectors/MangaOnlineFun.mjs
+rm -rf ../src/plugins/connectors/MangaReaderSite.mjs
+rm -rf ../src/plugins/connectors/MangaReaderTo.mjs
+rm -rf ../src/plugins/connectors/NineAnime.mjs
+rm -rf ../src/plugins/connectors/TencentComic.mjs
+rm -rf ../src/plugins/connectors/TuMangaOnline.mjs
+rm -rf ../src/plugins/connectors/UnnieGL.mjs
+
