@@ -16,11 +16,10 @@ const statusDefinitions = {
     completed: 'completed', // chapter/manga that already exist on the users device
 };
 
-export default class Manga extends EventTarget {
+export default class Manga {
 
     // TODO: use dependency injection instead of globals for Engine.Settings, Engine.Storage, all Enums
     constructor( connector, id, title, status ) {
-        super();
         this.connector = connector;
         this.id = id;
         this.title = title;
@@ -39,8 +38,6 @@ export default class Manga extends EventTarget {
     setStatus( status ) {
         if( this.status !== status ) {
             this.status = status;
-            this.dispatchEvent( new CustomEvent( events.updated, { detail: this } ) );
-            document.dispatchEvent( new CustomEvent( EventListener.onMangaStatusChanged, { detail: this } ) );
         }
     }
 

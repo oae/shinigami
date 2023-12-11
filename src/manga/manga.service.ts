@@ -22,8 +22,19 @@ export class MangaService {
     }
 
     const plugin = new Plugin();
+    
+    let mangas = await plugin.getMangas();
 
-    return plugin._getMangas();
+    if(mangas.length === 0) {
+      mangas = await plugin.updateMangas();
+    }
+    
+    return mangas.map((manga: any) => ({
+      id: manga.id,
+      title: manga.title,
+      status: manga.status,
+      connector: manga.connector.label
+    }));
   }
 
   async findChapters(chapterQueryDto: ChapterQueryDto) {

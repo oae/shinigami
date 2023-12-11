@@ -90,55 +90,44 @@ export default class Connector {
      * Update the manga list in the local storage.
      * Callback will be executed after completion and provided with a reference to the manga list (undefined on error).
      */
-    updateMangas( callback ) {
+    async updateMangas( callback ) {
         if( this.isUpdating ) {
             return;
         }
         this.isUpdating = true;
-        this.initialize()
-            .then( () => {
-                this._getMangaList( ( error, mangas ) => {
-                    if( error || !mangas || mangas.length === 0 ) {
-                        this.isUpdating = false;
-                        callback( error, undefined );
-                        return;
-                    }
-                    // remove duplicates by checking if manga with given ID is first occurance in list
-                    mangas = mangas.filter( ( manga, index ) => {
-                        return index === mangas.findIndex( m => m.id === manga.id );
-                    } );
-                    // sort by title
-                    mangas.sort( ( a, b ) => {
-                        return a.title.toLowerCase() < b.title.toLowerCase() ? -1 : 1;
-                    } );
-
-                    this.mangaCache = undefined;
-                    Engine.Storage.saveMangaList( this.id, mangas )
-                        .then( () => {
-                            // NOTE: connector.isUpdating must be set before the callback, because callback receiver relies on it
-                            this.isUpdating = false;
-                            this.getMangas( callback );
-                        } )
-                        .catch( error => {
-                            // NOTE: connector.isUpdating must be set before the callback, because callback receiver relies on it
-                            this.isUpdating = false;
-                            console.error( error.message );
-                            callback( error, undefined );
-                        } );
-                } );
-            } )
-            .catch( error => {
-            // NOTE: connector.isUpdating must be set before the callback, because callback receiver relies on it
-                this.isUpdating = false;
-                callback( error, undefined );
+        try {
+            await this.initialize();
+            let mangas = await this._getMangaList();
+            // remove duplicates by checking if manga with given ID is first occurance in list
+            mangas = mangas.filter( ( manga, index ) => {
+                return index === mangas.findIndex( m => m.id === manga.id );
             } );
+            // sort by title
+            mangas.sort( ( a, b ) => {
+                return a.title.toLowerCase() < b.title.toLowerCase() ? -1 : 1;
+            } );
+
+            this.mangaCache = undefined;
+            await Engine.Storage.saveMangaList( this.id, mangas );
+            this.isUpdating = false;
+            if(callback) {
+                callback( null, mangas );
+            }
+            return this.getMangas();
+        } catch(err) {
+            this.isUpdating = false;
+            if(callback) {
+                callback( err, undefined );
+            }
+            return Promise.reject( err );
+        }
     }
 
     /**
      * Get all mangas for the connector.
      * Callback will be executed after completion and provided with a reference to the manga list (undefined on error).
      */
-    getMangas( callback ) {
+    async getMangas( callback ) {
         // find all manga titles (sanitized) that are found in the base directory for this connector
         return Engine.Storage.getExistingMangaTitles( this )
             .catch( () => {
@@ -151,13 +140,17 @@ export default class Connector {
                 return this.mangaCache && this.mangaCache.length ? this._getUpdatedMangasFromCache() : this._getUpdatedMangasFromFile();
             } )
             .then( mangas => {
-                callback( null, mangas );
+                if(callback) {
+                    callback( null, mangas );
+                }
                 return Promise.resolve( mangas );
             } )
             .catch( error => {
             // TODO: remove log ... ?
                 console.warn( 'getMangas', error );
-                callback( error, this.mangaCache );
+                if(callback) {
+                    callback( error, this.mangaCache );
+                }
                 return Promise.reject( error );
             } );
     }
@@ -579,10 +572,16 @@ export default class Connector {
         try {
             // TODO: this.initialize()
             let mangas = await this._getMangas();
-            callback(null, mangas);
+            if(callback){
+                callback(null, mangas);
+            }
+            return mangas;
         } catch(error) {
             console.error(error, this);
-            callback(error, undefined);
+            if(callback) {
+                callback(error, undefined);
+            }
+            return Promise.reject( error );
         }
     }
 

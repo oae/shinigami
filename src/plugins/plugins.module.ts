@@ -22,6 +22,7 @@ export class PluginsModule {
     const EngineRequest = (await import('./engine/Request.mjs')).default;
     const Blacklist = (await import('./engine/Blacklist.mjs')).default;
     const Settings = (await import('./engine/Settings.mjs')).default;
+    const Storage = (await import('./engine/Storage.mjs')).default;
     const er = new EngineRequest();
     await er.setup();
     (globalThis as any).OAuth = OAuth;
@@ -29,6 +30,7 @@ export class PluginsModule {
       Request: er,
       Blacklist: new Blacklist(),
       Settings: new Settings(),
+      Storage: new Storage(),
     };
     return this.loadPlugins();
   }

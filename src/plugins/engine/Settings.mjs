@@ -34,11 +34,10 @@ const types = {
     directory: 'directory'
 };
 
-export default class Settings extends EventTarget {
+export default class Settings {
 
     // TODO: use dependency injection instead of globals for Engine.Storage, Engine.Conenctors
     constructor() {
-        super();
         let docs = '';
 
         this.frontend = {
@@ -113,7 +112,7 @@ export default class Settings extends EventTarget {
                 { value: extensions.pdf, name: 'Portable Document (*.pdf)' },
                 { value: extensions.epub, name: 'Ebook Reader (*.epub)' },
             ],
-            value: extensions.img
+            value: extensions.cbz
         };
 
         this.recompressionFormat = {
@@ -328,7 +327,6 @@ export default class Settings extends EventTarget {
                     }
                 }
             }
-            this.dispatchEvent(new CustomEvent(events.loaded, { detail: this }));
         } catch (error) {
             console.error('Failed to load HakuNeko settings!', error);
         }
@@ -352,7 +350,6 @@ export default class Settings extends EventTarget {
                 }
             }
             await Engine.Storage.saveConfig('settings', data, 2);
-            this.dispatchEvent(new CustomEvent(events.saved, { detail: this }));
         } catch (error) {
             console.error('Failed to save HakuNeko settings!', error);
         }

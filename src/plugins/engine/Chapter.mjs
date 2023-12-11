@@ -12,11 +12,10 @@ const statusDefinitions = {
     completed: 'completed', // chapter/manga that already exist on the users device
 };
 
-export default class Chapter extends EventTarget {
+export default class Chapter {
 
     // TODO: use dependency injection instead of globals for Engine.Settings, Engine.Storage, all Enums
     constructor( manga, id, title, language, status ) {
-        super();
         this.manga = manga;
         this.id = id;
         this.title = title;
@@ -37,8 +36,6 @@ export default class Chapter extends EventTarget {
     setStatus( status ) {
         if( this.status !== status ) {
             this.status = status;
-            this.dispatchEvent( new CustomEvent( events.updated, { detail: this } ) );
-            document.dispatchEvent( new CustomEvent( EventListener.onChapterStatusChanged, { detail: this } ) );
         }
     }
 
@@ -89,7 +86,6 @@ export default class Chapter extends EventTarget {
      * and a reference to the page list (undefined on error).
      */
     getPages( callback ) {
-        document.dispatchEvent(new CustomEvent(EventListener.onSelectChapter, { detail: this }));
         if( this.status === statusDefinitions.offline || this.status === statusDefinitions.completed ) {
             Engine.Storage.loadChapterPages( this )
                 .then( pages => {
