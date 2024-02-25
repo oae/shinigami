@@ -19,6 +19,7 @@ cp -R src/web/mjs/connectors ../src/plugins
 rm -rf ../src/plugins/connectors/system
 rm -rf ../src/plugins/connectors/templates/@Samples.mjs
 rm -rf ../src/plugins/connectors/Allanimesite2.mjs
+rm -rf ../src/plugins/connectors/AzoraManga.mjs
 rm -rf ../src/plugins/connectors/AnimePahe.mjs
 rm -rf ../src/plugins/connectors/BilibiliComics.mjs
 rm -rf ../src/plugins/connectors/BilibiliManhua.mjs
