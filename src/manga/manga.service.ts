@@ -3,7 +3,7 @@ import {
   ChapterQueryRequest,
   MangaQueryRequest,
   PageQueryRequest,
-} from 'src/manga/dto/manga-query.dto';
+} from 'src/manga/dto/request.dto';
 import { PluginsModule } from 'src/plugins/plugins.module';
 
 @Injectable()

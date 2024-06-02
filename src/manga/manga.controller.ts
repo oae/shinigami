@@ -3,7 +3,7 @@ import {
   ChapterQueryRequest,
   MangaQueryRequest,
   PageQueryRequest,
-} from './dto/manga-query.dto';
+} from './dto/request.dto';
 import { MangaService } from './manga.service';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 
