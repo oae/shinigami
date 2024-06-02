@@ -2,18 +2,19 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
+const port = 3001;
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const config = new DocumentBuilder()
     .setTitle('Shinigami API')
-    .setDescription('Backend for the Kaizoku app')
+    .setDescription('Provides manga information from various sources')
     .setVersion('1.0')
-    // .addTag('shinigami')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
-  await app.listen(3001);
+  await app.listen(port);
 }
 bootstrap();

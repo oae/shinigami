@@ -1,5 +1,5 @@
 /** @type {import("eslint").Linter.Config} */
-const config = {
+module.exports = {
   parser: '@typescript-eslint/parser',
   parserOptions: {
     project: 'tsconfig.json',
@@ -24,5 +24,3 @@ const config = {
     '@typescript-eslint/no-explicit-any': 'off',
   },
 };
-
-export default config;

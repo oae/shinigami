@@ -1,12 +1,10 @@
-import { Module, forwardRef } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { Module } from '@nestjs/common';
 import { PluginsModule } from './plugins/plugins.module';
 import { MangaModule } from './manga/manga.module';
 
 @Module({
   imports: [PluginsModule.registerPluginsAsync(), MangaModule],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}

@@ -43,4 +43,6 @@ rm -rf ../src/plugins/connectors/NineAnime.mjs
 rm -rf ../src/plugins/connectors/TencentComic.mjs
 rm -rf ../src/plugins/connectors/TuMangaOnline.mjs
 rm -rf ../src/plugins/connectors/UnnieGL.mjs
+rm -rf ../src/plugins/connectors/Zebrack.mjs
+rm -rf ../src/plugins/connectors/Zebrack.proto
 

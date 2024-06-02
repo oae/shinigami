@@ -1,83 +1,57 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { CreateMangaDto } from './dto/create-manga.dto';
-import { UpdateMangaDto } from './dto/update-manga.dto';
-import { ChapterQueryDto, MangaQueryDto, PageQueryDto } from 'src/manga/dto/manga-query.dto';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  ChapterQueryRequest,
+  MangaQueryRequest,
+  PageQueryRequest,
+} from 'src/manga/dto/manga-query.dto';
 import { PluginsModule } from 'src/plugins/plugins.module';
 
 @Injectable()
 export class MangaService {
-  create(createMangaDto: CreateMangaDto) {
-    return 'This action adds a new manga';
-  }
+  async queryMangasByPlugin(mangaQueryRequest: MangaQueryRequest) {
+    const plugin = this.getPlugin(mangaQueryRequest.pluginId);
 
-  async findAll(mangaQueryDto: MangaQueryDto) {
-    if (!mangaQueryDto.pluginId) {
-      return [];
-    }
-    const Plugin: any = PluginsModule.pluginsArray.find(
-      (plugin) => plugin.name === mangaQueryDto.pluginId,
-    )?.module;
-    if (!Plugin) {
-      return [];
-    }
-
-    const plugin = new Plugin();
-    
     let mangas = await plugin.getMangas();
 
-    if(mangas.length === 0) {
+    if (mangas.length === 0) {
       mangas = await plugin.updateMangas();
     }
-    
+
     return mangas.map((manga: any) => ({
       id: manga.id,
       title: manga.title,
       status: manga.status,
-      connector: manga.connector.label
+      connector: manga.connector.label,
     }));
   }
 
-  async findChapters(chapterQueryDto: ChapterQueryDto) {
-    if (!chapterQueryDto.pluginId) {
-      return [];
+  async queryChaptersByManga(chapterQueryRequest: ChapterQueryRequest) {
+    const plugin = this.getPlugin(chapterQueryRequest.pluginId);
+
+    return plugin._getChapters({ id: chapterQueryRequest.mangaId });
+  }
+
+  async queryPagesByChapter(pageQueryRequest: PageQueryRequest) {
+    const plugin = this.getPlugin(pageQueryRequest.pluginId);
+
+    return plugin._getPages({ id: pageQueryRequest.chapterId });
+  }
+
+  private getPlugin(pluginId: string): any {
+    if (pluginId === undefined || pluginId === null) {
+      throw new HttpException('Plugin ID is required', HttpStatus.BAD_REQUEST);
     }
-    const Plugin: any = PluginsModule.pluginsArray.find(
-      (plugin) => plugin.name === chapterQueryDto.pluginId,
+    const FoundPlugin: any = PluginsModule.pluginsArray.find(
+      (plugin) => plugin.name === pluginId,
     )?.module;
-    if (!Plugin) {
-      return [];
+
+    if (!FoundPlugin) {
+      throw new HttpException(
+        `Plugin with ID ${pluginId} not found`,
+        HttpStatus.BAD_REQUEST,
+      );
     }
 
-    const plugin = new Plugin();
-
-    return plugin._getChapters({ id: chapterQueryDto.mangaId });
-  }
-
-  async findPages(pageQueryDto: PageQueryDto) {
-    if (!pageQueryDto.pluginId) {
-      return [];
-    }
-    const Plugin: any = PluginsModule.pluginsArray.find(
-      (plugin) => plugin.name === pageQueryDto.pluginId,
-    )?.module;
-    if (!Plugin) {
-      return [];
-    }
-
-    const plugin = new Plugin();
-
-    return plugin._getPages({ id: pageQueryDto.chapterId });
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} manga`;
-  }
-
-  update(id: number, updateMangaDto: UpdateMangaDto) {
-    return `This action updates a #${id} manga`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} manga`;
+    return new FoundPlugin();
   }
 }

@@ -37,7 +37,7 @@ export class PluginsModule {
 
   private static loadPlugins(): Promise<DynamicModule> {
     Logger.log(`Loading plugins from ${PLUGIN_PATH}`, 'loadPlugins');
-    const loadedPlugins = new Array();
+    const loadedPlugins: unknown[] = [];
     this.searchPluginsInFolder(PLUGIN_PATH).forEach((filePath) => {
       loadedPlugins.push(
         this.loadPlugin(filePath).then((module) => {

@@ -1,52 +1,70 @@
+import { Body, Controller, Post } from '@nestjs/common';
 import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Patch,
-  Post,
-} from '@nestjs/common';
-import { ChapterQueryDto, MangaQueryDto, PageQueryDto } from './dto/manga-query.dto';
-import { UpdateMangaDto } from './dto/update-manga.dto';
+  ChapterQueryRequest,
+  MangaQueryRequest,
+  PageQueryRequest,
+} from './dto/manga-query.dto';
 import { MangaService } from './manga.service';
+import { ApiBody, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Manga')
 @Controller('manga')
 export class MangaController {
   constructor(private readonly mangaService: MangaService) {}
 
-  // @Post()
-  // create(@Body() createMangaDto: CreateMangaDto) {
-  //   return this.mangaService.create(createMangaDto);
-  // }
-
-  @Post()
-  async findAll(@Body() mangaQueryDto: MangaQueryDto) {
-    return this.mangaService.findAll(mangaQueryDto);
+  @ApiBody({
+    type: MangaQueryRequest,
+    required: true,
+    examples: {
+      manga: {
+        summary: 'Manga query',
+        description: 'Query for a specific manga',
+        value: {
+          pluginId: 'plugin-id',
+        },
+      },
+    },
+  })
+  @Post('query')
+  async queryMangasByPlugin(@Body() mangaQueryRequest: MangaQueryRequest) {
+    return this.mangaService.queryMangasByPlugin(mangaQueryRequest);
   }
 
-  @Post('chapter')
-  async findChapter(@Body() chapterQueryDto: ChapterQueryDto) {
-    return this.mangaService.findChapters(chapterQueryDto);
+  @ApiBody({
+    type: ChapterQueryRequest,
+    required: true,
+    examples: {
+      chapter: {
+        summary: 'Chapter query',
+        description: 'Query for a specific chapter',
+        value: {
+          pluginId: 'plugin-id',
+          mangaId: 'manga-id',
+        },
+      },
+    },
+  })
+  @Post('query-chapters')
+  async queryChaptersByManga(@Body() chapterQueryRequest: ChapterQueryRequest) {
+    return this.mangaService.queryChaptersByManga(chapterQueryRequest);
   }
 
-  @Post('page')
-  async findPage(@Body() pageQueryDto: PageQueryDto) {
-    return this.mangaService.findPages(pageQueryDto);
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.mangaService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateMangaDto: UpdateMangaDto) {
-    return this.mangaService.update(+id, updateMangaDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.mangaService.remove(+id);
+  @ApiBody({
+    type: PageQueryRequest,
+    required: true,
+    examples: {
+      page: {
+        summary: 'Page query',
+        description: 'Query for pages of a specific chapter',
+        value: {
+          pluginId: 'plugin-id',
+          chapterId: 'chapter-id',
+        },
+      },
+    },
+  })
+  @Post('query-pages')
+  async queryPagesByChapter(@Body() pageQueryRequest: PageQueryRequest) {
+    return this.mangaService.queryPagesByChapter(pageQueryRequest);
   }
 }

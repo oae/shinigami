@@ -1,12 +1,14 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { PluginsService } from 'src/plugins/plugins.service';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Plugin')
 @Controller('plugins')
 export class PluginsController {
   constructor(private readonly pluginsService: PluginsService) {}
 
-  @Get()
-  plugins(): string[] {
-    return this.pluginsService.getPlugins();
+  @Get('query')
+  queryPlugins(): string[] {
+    return this.pluginsService.queryPlugins();
   }
 }

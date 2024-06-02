@@ -1,13 +1,13 @@
-export class MangaQueryDto {
+export class MangaQueryRequest {
   pluginId: string;
 }
 
-export class ChapterQueryDto {
+export class ChapterQueryRequest {
   pluginId: string;
   mangaId: string;
 }
 
-export class PageQueryDto {
+export class PageQueryRequest {
   pluginId: string;
   chapterId: string;
 }
