@@ -22,4 +22,4 @@ async function bootstrap() {
 
   await app.listen(port);
 }
-bootstrap();
+bootstrap().then(() => console.log(`Shinigami API is running on port ${port}`));
