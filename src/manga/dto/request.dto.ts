@@ -1,5 +1,6 @@
 export class MangaQueryRequest {
   pluginId: string;
+  keyword: string;
 }
 
 export class ChapterQueryRequest {

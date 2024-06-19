@@ -17,12 +17,44 @@ export class MangaService {
       mangas = await plugin.updateMangas();
     }
 
-    return mangas.map((manga: any) => ({
-      id: manga.id,
-      title: manga.title,
-      status: manga.status,
-      connector: manga.connector.label,
-    }));
+    const mangasById = mangas.reduce((byId: any, manga: any) => {
+      byId[manga.id] = manga;
+      return byId;
+    }, {});
+
+    const MiniSearch = (await import('minisearch')).default;
+    const suffixes = (term: string, minLength: number) => {
+      if (term == null) {
+        return [];
+      }
+      const tokens = [];
+      for (let i = 0; i <= term.length - minLength; i++) {
+        tokens.push(term.slice(i));
+      }
+      return tokens;
+    };
+    const miniSearch = new MiniSearch({
+      fields: ['title'],
+      storeFields: ['id'],
+      processTerm: (term) => suffixes(term, 3),
+      searchOptions: {
+        boost: { title: 2 },
+        fuzzy: 0.1,
+      },
+    });
+    miniSearch.addAll(mangas);
+
+    const results = miniSearch.search(mangaQueryRequest.keyword);
+
+    return results.map((result) => {
+      const manga = mangasById[result.id];
+      return {
+        id: manga.id,
+        title: manga.title,
+        status: manga.status,
+        connector: manga.connector.label,
+      };
+    });
   }
 
   async queryChaptersByManga(chapterQueryRequest: ChapterQueryRequest) {

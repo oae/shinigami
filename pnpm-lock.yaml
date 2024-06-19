@@ -38,15 +38,15 @@ importers:
       class-validator:
         specifier: ^0.14.1
         version: 0.14.1
-      fuse.js:
-        specifier: ^7.0.0
-        version: 7.0.0
       jsdom:
         specifier: ^24.1.0
         version: 24.1.0
       jszip:
         specifier: ^3.10.1
         version: 3.10.1
+      minisearch:
+        specifier: ^6.3.0
+        version: 6.3.0
       nightmare:
         specifier: ^3.0.2
         version: 3.0.2
@@ -1882,10 +1882,6 @@ packages:
   function-source@0.1.0:
     resolution: {integrity: sha512-I80Bh3QAcLduCjhgkfrBnm67XwvjPSmiG3joj8GlTD8Qj4E4zkyDNjJXepbxCaCIsPJ3rwouWxAOaZfdDz5hEA==}
 
-  fuse.js@7.0.0:
-    resolution: {integrity: sha512-14F4hBIxqKvD4Zz/XjDc3y94mNZN6pRv3U13Udo0lNLCWRBUsrMv2xwcF/y/Z5sV6+FQW+/ow68cHpm4sunt8Q==}
-    engines: {node: '>=10'}
-
   gensync@1.0.0-beta.2:
     resolution: {integrity: sha512-3hN7NaskYvMDLQY55gnW3NQ+mesEAepTqlg+VEbj7zzqEMBVNhzcGYYeqFo/TlYz6eQiFcp1HcsCZO+nGgS8zg==}
     engines: {node: '>=6.9.0'}
@@ -2635,6 +2631,9 @@ packages:
   minipass@7.0.4:
     resolution: {integrity: sha512-jYofLM5Dam9279rdkWzqHozUo4ybjdZmCsDHePy5V/PbBcVMiSZR97gmAy45aqi8CK1lG2ECd356FU86avfwUQ==}
     engines: {node: '>=16 || 14 >=14.17'}
+
+  minisearch@6.3.0:
+    resolution: {integrity: sha512-ihFnidEeU8iXzcVHy74dhkxh/dn8Dc08ERl0xwoMMGqp4+LvRSCgicb+zGqWthVokQKvCSxITlh3P08OzdTYCQ==}
 
   minstache@1.2.0:
     resolution: {integrity: sha512-VSAeaiKXHIKifdNHCalWmFvChtLrNirwhDZd0yeEO57WXCT+uJYN3RPAusvLi3z7VlwFBBtDX80bG7aHkcMAmg==}
@@ -5932,8 +5931,6 @@ snapshots:
 
   function-source@0.1.0: {}
 
-  fuse.js@7.0.0: {}
-
   gensync@1.0.0-beta.2: {}
 
   get-caller-file@2.0.5: {}
@@ -6861,6 +6858,8 @@ snapshots:
   minipass@4.2.8: {}
 
   minipass@7.0.4: {}
+
+  minisearch@6.3.0: {}
 
   minstache@1.2.0:
     dependencies:

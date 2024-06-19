@@ -1,0 +1,28 @@
+version: '3'
+
+volumes:
+  db:
+
+
+services:
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+  db:
+    image: postgres:alpine
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U shinigami" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    environment:
+      - POSTGRES_USER=shinigami
+      - POSTGRES_DB=shinigami
+      - POSTGRES_PASSWORD=shinigami
+    volumes:
+      - db:/var/lib/postgresql/data
+    ports:
+      - "5445:5432"

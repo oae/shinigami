@@ -1,11 +1,11 @@
 import { Body, Controller, Post } from '@nestjs/common';
+import { ApiBody, ApiTags } from '@nestjs/swagger';
 import {
   ChapterQueryRequest,
   MangaQueryRequest,
   PageQueryRequest,
 } from './dto/request.dto';
 import { MangaService } from './manga.service';
-import { ApiBody, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Manga')
 @Controller('manga')
@@ -21,6 +21,7 @@ export class MangaController {
         description: 'Query for a specific manga',
         value: {
           pluginId: 'plugin-id',
+          keyword: 'test',
         },
       },
     },
